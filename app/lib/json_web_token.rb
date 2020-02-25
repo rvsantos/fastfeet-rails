@@ -10,9 +10,9 @@ class JsonWebToken
       JWT.encode(payload, SECRET_KEY)
     end
 
-    def decode(_token)
+    def decode(token)
       # get payload; first index in decoded array
-      body = JWT.decode(payload, SECRET_KEY)
+      body = JWT.decode(token, SECRET_KEY).first
       HashWithIndifferentAccess.new body
       # rescue from all decode errors
     rescue JWT::DecodeError => e
