@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :find_user, only: [:show]
+  before_action :find_user, only: %i[show update]
 
   def index
     @users = User.all
@@ -12,6 +12,14 @@ class Api::V1::UsersController < ApplicationController
       render json: @user, status: :created
     else
       render json: { errors: @user }, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    if @user.update(user_params)
+      render json: @user, status: :ok
+    else
+      render json: { errors: @user }, status: :not_found
     end
   end
 
