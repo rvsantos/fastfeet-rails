@@ -64,8 +64,8 @@ describe 'Users API', type: :request do
         expect(response).to have_http_status(422)
       end
 
-      it 'returns json data with errors' do
-        expect(json_body).to have_key(:errors)
+      it 'returns json data with message error' do
+        expect(json_body[:message]).to match(/Validation failed/)
       end
     end
   end
@@ -88,12 +88,12 @@ describe 'Users API', type: :request do
     context 'when request attributes are invalid' do
       let(:attributes) { { name: '' } }
 
-      it 'returns status code 404' do
-        expect(response).to have_http_status(404)
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
       end
 
-      it 'returns json data with errors' do
-        expect(json_body).to have_key(:errors)
+      it 'returns json data with message error' do
+        expect(json_body[:message]).to match(/Validation failed/)
       end
     end
   end
