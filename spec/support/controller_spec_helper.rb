@@ -13,7 +13,8 @@ module ControllerSpecHelper
   def valid_headers
     {
       'Authorization' => token_generator(user.id),
-      'Content-Type' => Mime[:json].to_s
+      'Content-Type' => Mime[:json].to_s,
+      'Accept' => 'application/vnd.fastfeet.v1'
     }
   end
 
@@ -21,7 +22,8 @@ module ControllerSpecHelper
   def invalid_headers
     {
       'Authorization' => nil,
-      'Content-Type' => Mime[:json].to_s
+      'Content-Type' => Mime[:json].to_s,
+      'Accept' => 'application/vnd.fastfeet.v1'
     }
   end
 end
