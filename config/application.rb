@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 require_relative 'boot'
 
-require "rails"
+require 'rails'
 # Pick the frameworks you want:
-require "active_model/railtie"
-require "active_job/railtie"
-require "active_record/railtie"
-require "active_storage/engine"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "action_view/railtie"
-require "action_cable/engine"
+require 'active_model/railtie'
+require 'active_job/railtie'
+require 'active_record/railtie'
+require 'active_storage/engine'
+require 'action_controller/railtie'
+require 'action_mailer/railtie'
+require 'action_view/railtie'
+require 'action_cable/engine'
 # require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
@@ -19,6 +21,18 @@ Bundler.require(*Rails.groups)
 
 module FastfeetRails
   class Application < Rails::Application
+    config.generators do |g|
+      g.test_framework :rspec, fixture: true
+      g.fixture_replacement :factory_bot, dir: 'spec/factories'
+      g.view_specs false
+      g.helper_specs false
+      g.stylesheets = false
+      g.javascripts = false
+      g.helper = false
+    end
+
+    config.autoload_paths += %W[\#{config.root}/lib]
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
