@@ -47,7 +47,7 @@ end
 
 RSpec.configure do |config|
   # RequestSpecHelper && RequestSpecHelper
-  # config.include RequestSpecHelper
+  config.include RequestSpecHelper
   # config.include HeaderSpecHelper
 
   # FactoryBot
