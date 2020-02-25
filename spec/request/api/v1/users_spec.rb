@@ -41,4 +41,32 @@ describe 'Users API', type: :request do
       end
     end
   end
+
+  describe 'POST /users' do
+    before { post '/users', params: attributes.to_json, headers: headers }
+
+    context 'when request attributes are valid' do
+      let(:attributes) { attributes_for(:user) }
+
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+
+      it 'returns json data the user created' do
+        expect(json_body).to have_key(:email)
+      end
+    end
+
+    context 'when request attributes are invalid' do
+      let(:attributes) { attributes_for(:user).except(:email) }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns json data with errors' do
+        expect(json_body).to have_key(:errors)
+      end
+    end
+  end
 end
