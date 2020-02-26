@@ -1,5 +1,5 @@
 class Api::V1::RecipientsController < ApplicationController
-  before_action :find_recipient, only: [:show]
+  before_action :find_recipient, only: %i[show update]
 
   def index
     @recipients = Recipient.all
@@ -7,8 +7,13 @@ class Api::V1::RecipientsController < ApplicationController
   end
 
   def create
-    @user = Recipient.create!(set_params)
-    json_response(@user, :created)
+    @recipient = Recipient.create!(set_params)
+    json_response(@recipient, :created)
+  end
+
+  def update
+    @recipient.update!(set_params)
+    json_response(@recipient)
   end
 
   def show
