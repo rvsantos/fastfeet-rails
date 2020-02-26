@@ -98,4 +98,16 @@ describe 'Recipients API', type: :request do
       end
     end
   end
+
+  describe 'DELETE /recipients/:id' do
+    before { delete "/recipients/#{recipient_id}", params: {}, headers: headers }
+
+    it 'returns status code 204' do
+      expect(response).to have_http_status(204)
+    end
+
+    it 'remove recipient from database' do
+      expect(Recipient.find_by(id: recipient_id)).to be_nil
+    end
+  end
 end

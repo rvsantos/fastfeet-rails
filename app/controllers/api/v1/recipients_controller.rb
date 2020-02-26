@@ -1,5 +1,5 @@
 class Api::V1::RecipientsController < ApplicationController
-  before_action :find_recipient, only: %i[show update]
+  before_action :find_recipient, only: %i[show update destroy]
 
   def index
     @recipients = Recipient.all
@@ -18,6 +18,11 @@ class Api::V1::RecipientsController < ApplicationController
 
   def show
     json_response(@recipient)
+  end
+
+  def destroy
+    @recipient.destroy
+    head 204
   end
 
   private
