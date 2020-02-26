@@ -4,7 +4,8 @@ describe 'Users API', type: :request do
   let(:headers) do
     {
       'Content-Type': Mime[:json].to_s,
-      Accept: 'application/vnd.fastfeet.v1'
+      Accept: 'application/vnd.fastfeet.v1',
+      'Authorization': token_generator(users.first.id)
     }
   end
 
