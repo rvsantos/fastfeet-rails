@@ -3,9 +3,10 @@ describe 'Recipients API', type: :request do
   let(:headers) { valid_headers }
   let!(:recipients) { create_list(:recipient, 10) }
   let(:recipient_id) { recipients.first.id }
+  let(:page) { 1 }
 
   describe 'GET /recipients' do
-    before { get '/recipients', params: {}, headers: headers }
+    before { get "/recipients?page=#{page}", params: {}, headers: headers }
 
     it 'returns all recipients' do
       expect(json_body[:data].size).to eq(10)
@@ -13,6 +14,14 @@ describe 'Recipients API', type: :request do
 
     it 'returns status code 200' do
       expect(response).to have_http_status(200)
+    end
+
+    context 'when returns page 2' do
+      let(:page) { 2 }
+
+      it 'json data must be empty' do
+        expect(json_body[:data]).to be_empty
+      end
     end
   end
 

@@ -1,6 +1,7 @@
 describe 'Users API', type: :request do
   let!(:users) { create_list(:user, 10) }
   let(:user_id) { users.first.id }
+  let(:page) { 1 }
   let(:headers) do
     {
       'Content-Type': Mime[:json].to_s,
@@ -10,7 +11,7 @@ describe 'Users API', type: :request do
   end
 
   describe 'GET /users' do
-    before { get '/users', params: {}, headers: headers }
+    before { get "/users?page=#{page}", params: {}, headers: headers }
 
     it 'returns all users' do
       expect(json_body[:data].size).to eq 10
@@ -18,6 +19,14 @@ describe 'Users API', type: :request do
 
     it 'returns status code 200' do
       expect(response).to have_http_status(200)
+    end
+
+    context 'when returns page 2' do
+      let(:page) { 2 }
+
+      it 'json data must be empty' do
+        expect(json_body[:data]).to be_empty
+      end
     end
   end
 
