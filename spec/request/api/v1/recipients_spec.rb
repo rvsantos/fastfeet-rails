@@ -37,4 +37,34 @@ describe 'Recipients API', type: :request do
       end
     end
   end
+
+  describe 'POST /recipients' do
+    before do
+      post '/recipients', params: recipient_params.to_json, headers: headers
+    end
+
+    context 'when request attributes are valid' do
+      let(:recipient_params) { attributes_for(:recipient) }
+
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+
+      it 'returns the user created' do
+        expect(json_body[:name]).to eq(recipient_params[:name])
+      end
+    end
+
+    context 'when request attributes are invalid' do
+      let(:recipient_params) { attributes_for(:recipient).except(:state) }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns json data with error message' do
+        expect(json_body[:message]).to match(/Validation failed/)
+      end
+    end
+  end
 end
