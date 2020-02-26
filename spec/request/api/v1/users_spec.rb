@@ -13,7 +13,7 @@ describe 'Users API', type: :request do
     before { get '/users', params: {}, headers: headers }
 
     it 'returns all users' do
-      expect(json_body.size).to eq 10
+      expect(json_body[:data].size).to eq 10
     end
 
     it 'returns status code 200' do
@@ -26,7 +26,7 @@ describe 'Users API', type: :request do
 
     context 'when the record exist' do
       it 'returns the user' do
-        expect(json_body[:id]).to eq user_id
+        expect(json_body[:data][:id].to_i).to eq user_id
       end
 
       it 'returns status code 200' do
@@ -54,7 +54,7 @@ describe 'Users API', type: :request do
       end
 
       it 'returns json data the user created' do
-        expect(json_body).to have_key(:email)
+        expect(json_body[:data][:attributes]).to have_key(:email)
       end
     end
 
@@ -82,7 +82,7 @@ describe 'Users API', type: :request do
       end
 
       it 'returns json data the user created' do
-        expect(json_body[:name]).to eq attributes[:name]
+        expect(json_body[:data][:attributes][:name]).to eq attributes[:name]
       end
     end
 

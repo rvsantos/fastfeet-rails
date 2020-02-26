@@ -3,22 +3,22 @@ class Api::V1::UsersController < ApplicationController
   skip_before_action :authorize_request, only: [:created]
 
   def index
-    @users = User.all
+    @users = serializer.new(User.all)
     json_response(@users)
   end
 
   def create
-    @user = User.create!(user_params)
+    @user = serializer.new(User.create!(user_params))
     json_response(@user, :created)
   end
 
   def update
     @user.update!(user_params)
-    json_response(@user)
+    json_response(serializer.new(@user))
   end
 
   def show
-    json_response(@user)
+    json_response(serializer.new(@user))
   end
 
   def destroy
@@ -34,5 +34,9 @@ class Api::V1::UsersController < ApplicationController
 
   def find_user
     @user = User.find(params[:id])
+  end
+
+  def serializer
+    UserSerializer
   end
 end
