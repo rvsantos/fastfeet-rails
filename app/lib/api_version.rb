@@ -5,7 +5,7 @@ class ApiVersion
 
   def initialize(options)
     @version = options[:version]
-    @defualt = options[:default]
+    @default = options[:default]
   end
 
   # check whether version is specified or is defaut
