@@ -8,7 +8,7 @@ describe 'Recipients API', type: :request do
     before { get '/recipients', params: {}, headers: headers }
 
     it 'returns all recipients' do
-      expect(json_body.size).to eq(10)
+      expect(json_body[:data].size).to eq(10)
     end
 
     it 'returns status code 200' do
@@ -25,7 +25,7 @@ describe 'Recipients API', type: :request do
       end
 
       it 'returns json data with recipient' do
-        expect(json_body).to have_key(:street)
+        expect(json_body[:data][:attributes]).to have_key(:street)
       end
     end
 
@@ -51,7 +51,7 @@ describe 'Recipients API', type: :request do
       end
 
       it 'returns the user created' do
-        expect(json_body[:name]).to eq(recipient_params[:name])
+        expect(json_body[:data][:attributes][:name]).to eq(recipient_params[:name])
       end
     end
 
@@ -82,7 +82,7 @@ describe 'Recipients API', type: :request do
       end
 
       it 'returns the user created' do
-        expect(json_body[:street]).to eq(recipient_params[:street])
+        expect(json_body[:data][:attributes][:street]).to eq(recipient_params[:street])
       end
     end
 

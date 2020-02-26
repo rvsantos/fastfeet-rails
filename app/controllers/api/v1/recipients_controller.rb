@@ -2,22 +2,22 @@ class Api::V1::RecipientsController < ApplicationController
   before_action :find_recipient, only: %i[show update destroy]
 
   def index
-    @recipients = Recipient.all
+    @recipients = serializer.new(Recipient.all)
     json_response(@recipients)
   end
 
   def create
-    @recipient = Recipient.create!(set_params)
+    @recipient = serializer.new(Recipient.create!(set_params))
     json_response(@recipient, :created)
   end
 
   def update
     @recipient.update!(set_params)
-    json_response(@recipient)
+    json_response(serializer.new(@recipient))
   end
 
   def show
-    json_response(@recipient)
+    json_response(serializer.new(@recipient))
   end
 
   def destroy
@@ -33,5 +33,9 @@ class Api::V1::RecipientsController < ApplicationController
 
   def find_recipient
     @recipient = Recipient.find(params[:id])
+  end
+
+  def serializer
+    RecipientSerializer
   end
 end
