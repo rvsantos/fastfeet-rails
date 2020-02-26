@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
   skip_before_action :authorize_request, only: [:created]
 
   def index
-    @users = serializer.new(User.all)
+    @users = serializer.new(User.all.paginate(page: params[:page], per_page: 10))
     json_response(@users)
   end
 

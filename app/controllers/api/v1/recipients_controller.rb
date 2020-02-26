@@ -2,7 +2,7 @@ class Api::V1::RecipientsController < ApplicationController
   before_action :find_recipient, only: %i[show update destroy]
 
   def index
-    @recipients = serializer.new(Recipient.all)
+    @recipients = serializer.new(Recipient.all.paginate(page: params[:page], per_page: 10))
     json_response(@recipients)
   end
 
