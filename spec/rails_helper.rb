@@ -46,6 +46,8 @@ Shoulda::Matchers.configure do |config|
 end
 
 RSpec.configure do |config|
+  include ActionDispatch::TestProcess
+
   # RequestSpecHelper && RequestSpecHelper
   config.include RequestSpecHelper
   config.include ControllerSpecHelper
