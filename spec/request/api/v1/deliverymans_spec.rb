@@ -61,4 +61,33 @@ describe 'Deliveryman API', type: :request do
       expect(Deliveryman.count).to eq(10)
     end
   end
+
+  describe 'GET /deliverymans/:id' do
+    before { get "/deliverymans/#{deliveryman_id}", params: {}, headers: headers }
+
+    let(:deliverymans) { create_list(:deliveryman, 5) }
+    let(:deliveryman_id) { deliverymans.last.id }
+
+    context 'when record exist' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns json data with email' do
+        expect(json_body[:data][:id].to_i).to eq(deliveryman_id)
+      end
+    end
+
+    context 'when record does not exist' do
+      let(:deliveryman_id) { 1000 }
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns json data with error message' do
+        expect(json_body[:message]).to match(/Couldn't find Deliveryman/)
+      end
+    end
+  end
 end

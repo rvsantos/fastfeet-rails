@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       resources :users, only: %i[index show create update destroy]
       resources :sessions, only: [:create]
       resources :recipients, only: %i[index show create update destroy]
-      resources :deliverymans, only: %i[create index] do
+      resources :deliverymans, only: %i[create index show] do
         resources :avatar, only: [:create]
       end
     end
