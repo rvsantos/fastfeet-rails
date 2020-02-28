@@ -1,6 +1,8 @@
 class Api::V1::DeliverymansController < ApplicationController
   def index
-    @deliveryman = DeliverymanSerializer.new(Deliveryman.all.with_attached_avatar).serializable_hash
+    @deliveryman = DeliverymanSerializer.new(
+      Deliveryman.all.with_attached_avatar
+    ).serializable_hash
     json_response(@deliveryman)
   end
 

@@ -41,4 +41,24 @@ describe 'Deliveryman API', type: :request do
       end
     end
   end
+
+  describe 'GET /deliverymans' do
+    subject { get '/deliverymans', params: {}, headers: headers }
+
+    let!(:deliverymans) { create_list(:deliveryman, 10) }
+
+    it 'returns status code 200' do
+      subject
+      expect(response).to have_http_status(200)
+    end
+
+    it 'return json data with deliveryman email' do
+      subject
+      expect(json_body[:data].first[:attributes]).to have_key(:email)
+    end
+
+    it 'returns all deliverymans' do
+      expect(Deliveryman.count).to eq(10)
+    end
+  end
 end
