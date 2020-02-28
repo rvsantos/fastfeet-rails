@@ -1,18 +1,21 @@
 class Api::V1::DeliverymansController < ApplicationController
+  def index
+    @deliveryman = DeliverymanSerializer.new(Deliveryman.all.with_attached_avatar).serializable_hash
+    json_response(@deliveryman)
+  end
+
   def create
-    @deliveryman = Deliveryman.new(set_params)
-
-    if @deliveryman.save
-      json_response(@deliveryman, :created)
-    else
-      @deliveryman.avatar.purge
-      json_response({ errors: @deliveryman }, 422)
-    end
+    @deliveryman = DeliverymanSerializer.new(Deliveryman.create!(set_params))
+    json_response(@deliveryman, :created)
   end
+end
 
-  private
+private
 
-  def set_params
-    params.permit(:name, :email, :avatar)
-  end
+def set_params
+  params.permit(:name, :email)
+end
+
+def serializer
+  DeliverymanSerializer
 end
