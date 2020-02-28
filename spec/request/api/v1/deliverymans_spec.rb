@@ -1,9 +1,10 @@
 describe 'Deliveryman API', type: :request do
   let!(:user) { create(:user) }
   let(:headers) { valid_headers }
+  let(:avatar) { fixture_file_upload('spec/fixtures/avatar.png') }
 
   describe 'POST /deliverymans' do
-    subject { post '/deliverymans', params: params, headers: headers }
+    subject { post '/deliverymans', params: params.to_json, headers: headers }
 
     context 'when attributes request are valid' do
       let(:params) { attributes_for(:deliveryman) }
@@ -13,17 +14,13 @@ describe 'Deliveryman API', type: :request do
         expect(response).to have_http_status(201)
       end
 
-      it 'returns a json data with deliveryman info' do
-        subject
-        expect(json_body).to have_key(:email)
-      end
-
       it 'creates a deliveryman' do
         expect { subject }.to change(Deliveryman, :count).from(0).to(1)
       end
 
-      it 'creates a blob' do
-        expect { subject }.to change { ActiveStorage::Blob.count }.from(0).to(1)
+      it 'returns a json data with deliveryman info' do
+        subject
+        expect(json_body[:data][:attributes]).to have_key(:email)
       end
     end
 
@@ -37,15 +34,11 @@ describe 'Deliveryman API', type: :request do
 
       it 'retuns a JSON response' do
         subject
-        expect(json_body).to have_key(:errors)
+        expect(json_body[:message]).to match(/Email can't be blank/)
       end
 
       it 'does not create a user' do
         expect { subject }.not_to change(Deliveryman, :count).from(0)
-      end
-
-      it 'does not create a blob' do
-        expect { subject }.not_to change { ActiveStorage::Blob.count }.from(0)
       end
     end
   end
