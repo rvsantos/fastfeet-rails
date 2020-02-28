@@ -1,7 +1,6 @@
 describe 'Deliveryman API', type: :request do
   let!(:user) { create(:user) }
   let(:headers) { valid_headers }
-  let(:avatar) { fixture_file_upload('spec/fixtures/avatar.png') }
 
   describe 'POST /deliverymans' do
     subject { post '/deliverymans', params: params.to_json, headers: headers }
