@@ -11,5 +11,7 @@ RSpec.describe Recipient, type: :model do
   it { is_expected.to validate_presence_of(:city) }
   it { is_expected.to validate_presence_of(:zip_code) }
 
+  it { is_expected.to have_many(:orders) }
+
   it { is_expected.to be_valid }
 end
