@@ -125,4 +125,24 @@ describe 'Deliveryman API', type: :request do
       end
     end
   end
+
+  describe 'DELETE /deliverymans/:id' do
+    subject { delete "/deliverymans/#{deliveryman_id}", params: {}, headers: headers }
+
+    let!(:deliveryman) { create(:deliveryman, :with_avatar) }
+    let(:deliveryman_id) { deliveryman.id }
+
+    it 'returns status code 204' do
+      subject
+      expect(response).to have_http_status(204)
+    end
+
+    it 'remove deliveryman from database' do
+      expect { subject }.to change(Deliveryman, :count).from(1).to(0)
+    end
+
+    it 'remove the avatar' do
+      expect { subject }.to change(ActiveStorage::Attachment, :count).from(1).to(0)
+    end
+  end
 end

@@ -1,25 +1,31 @@
 class Api::V1::DeliverymansController < ApplicationController
-  before_action :find_deliveryman, only: %i[show update]
+  before_action :find_deliveryman, only: %i[show update destroy]
 
   def index
-    @deliveryman = DeliverymanSerializer.new(
+    @deliveryman = serializer.new(
       Deliveryman.all.with_attached_avatar
     ).serializable_hash
     json_response(@deliveryman)
   end
 
   def create
-    @deliveryman = DeliverymanSerializer.new(Deliveryman.create!(set_params))
+    @deliveryman = serializer.new(Deliveryman.create!(set_params))
     json_response(@deliveryman, :created)
   end
 
   def show
-    json_response(DeliverymanSerializer.new(@deliveryman))
+    json_response(serializer.new(@deliveryman))
   end
 
   def update
     @deliveryman.update!(set_params)
     json_response(serializer.new(@deliveryman))
+  end
+
+  def destroy
+    @deliveryman.destroy
+    @deliveryman.avatar.purge
+    head 204
   end
 end
 
