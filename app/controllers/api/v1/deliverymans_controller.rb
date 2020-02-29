@@ -1,5 +1,5 @@
 class Api::V1::DeliverymansController < ApplicationController
-  before_action :find_deliveryman, only: [:show]
+  before_action :find_deliveryman, only: %i[show update]
 
   def index
     @deliveryman = DeliverymanSerializer.new(
@@ -15,6 +15,11 @@ class Api::V1::DeliverymansController < ApplicationController
 
   def show
     json_response(DeliverymanSerializer.new(@deliveryman))
+  end
+
+  def update
+    @deliveryman.update!(set_params)
+    json_response(serializer.new(@deliveryman))
   end
 end
 

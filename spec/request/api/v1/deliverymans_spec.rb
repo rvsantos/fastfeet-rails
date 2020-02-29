@@ -90,4 +90,39 @@ describe 'Deliveryman API', type: :request do
       end
     end
   end
+
+  describe 'PUT /deliverymans/:id' do
+    subject { put "/deliverymans/#{deliveryman_id}", params: params.to_json, headers: headers }
+
+    let(:deliveryman) { create(:deliveryman) }
+    let(:deliveryman_id) { deliveryman.id }
+
+    context 'when attributes request are valid' do
+      let(:params) { { email: 'novo_email@.com' } }
+
+      it 'returns status code 200' do
+        subject
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns a json data with deliveryman info' do
+        subject
+        expect(json_body[:data][:attributes][:email]).to eq(params[:email])
+      end
+    end
+
+    context 'when attributes request are invalid' do
+      let(:params) { { email: '' } }
+
+      it 'returns status code 422' do
+        subject
+        expect(response).to have_http_status(422)
+      end
+
+      it 'retuns a JSON response' do
+        subject
+        expect(json_body[:message]).to match(/Email can't be blank/)
+      end
+    end
+  end
 end
