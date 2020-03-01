@@ -1,8 +1,8 @@
 class Api::V1::OrdersController < ApplicationController
   before_action :find_recipient, only: [:create]
   before_action :find_deliveryman, only: [:create]
-  before_action :find_order, only: [:show]
-  before_action :set_options_serializer, only: %i[show index create]
+  before_action :find_order, only: %i[show update]
+  before_action :set_options_serializer, except: [:destroy]
 
   def index
     @orders = serializer.new(Order.all, @options).serializable_hash
@@ -15,6 +15,13 @@ class Api::V1::OrdersController < ApplicationController
     @order.recipient = @recipient
     @order.save!
     json_response(serializer.new(@order, @options).serialized_json, :created)
+  end
+
+  def update
+    @order.deliveryman = @deliveryman if @deliveryman
+    @order.recipient = @recipient if @recipient
+    @order.update!(order_params)
+    json_response(serializer.new(@order, @options))
   end
 
   def show

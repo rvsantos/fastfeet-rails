@@ -3,8 +3,8 @@ describe 'Orders API', type: :request do
   let(:user_id) { user.id }
   let(:deliveryman) { create(:deliveryman) }
   let(:deliveryman_id) { deliveryman.id }
-  let(:recipient) { create(:recipient) }
-  let(:recipient_id) { recipient.id }
+  let(:recipients) { create_list(:recipient, 2) }
+  let(:recipient_id) { recipients.first.id }
   let(:order) { create(:order) }
   let(:order_id) { order.id }
   let(:headers) { valid_headers }
@@ -81,6 +81,40 @@ describe 'Orders API', type: :request do
 
       it 'returns json data with error message' do
         expect(json_body[:message]).to match(/Couldn't find Order/)
+      end
+    end
+  end
+
+  describe 'PUT /orders/id' do
+    before do
+      put "/orders/#{order_id}", params: params.to_json, headers: headers
+    end
+
+    context 'when request attributes are valid' do
+      let(:params) { { product: 'bike bike bike', recipient_id: recipients.last.id } }
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns json data with order' do
+        expect(json_body[:data][:attributes][:product]).to eq(params[:product])
+      end
+
+      it 'must change relationships' do
+        expect(json_body[:data][:relationships][:recipient][:data][:id].to_i).to eq(recipients.last.id)
+      end
+    end
+
+    context 'when order request does not exist' do
+      let(:params) { { product: '' } }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns json data with error message' do
+        expect(json_body[:message]).to match(/Product can't be blank/)
       end
     end
   end
