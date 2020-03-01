@@ -5,7 +5,7 @@ describe 'Orders API', type: :request do
   let(:deliveryman_id) { deliveryman.id }
   let(:recipients) { create_list(:recipient, 2) }
   let(:recipient_id) { recipients.first.id }
-  let(:order) { create(:order) }
+  let!(:order) { create(:order) }
   let(:order_id) { order.id }
   let(:headers) { valid_headers }
   let(:valid_params) do
@@ -53,7 +53,7 @@ describe 'Orders API', type: :request do
     end
 
     it 'returns all orders' do
-      expect(json_body[:data].count).to eq(5)
+      expect(json_body[:data].count).to eq(6)
     end
   end
 
@@ -116,6 +116,19 @@ describe 'Orders API', type: :request do
       it 'returns json data with error message' do
         expect(json_body[:message]).to match(/Product can't be blank/)
       end
+    end
+  end
+
+  describe 'DELETE /orders/:id' do
+    subject { delete "/orders/#{order_id}", params: {}, headers: headers }
+
+    it 'returns status code 204' do
+      subject
+      expect(response).to have_http_status(204)
+    end
+
+    it 'remove order from database' do
+      expect { subject }.to change(Order, :count).from(1).to(0)
     end
   end
 end

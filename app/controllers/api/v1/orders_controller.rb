@@ -1,7 +1,7 @@
 class Api::V1::OrdersController < ApplicationController
   before_action :find_recipient, only: [:create]
   before_action :find_deliveryman, only: [:create]
-  before_action :find_order, only: %i[show update]
+  before_action :find_order, only: %i[show update destroy]
   before_action :set_options_serializer, except: [:destroy]
 
   def index
@@ -26,6 +26,11 @@ class Api::V1::OrdersController < ApplicationController
 
   def show
     json_response(serializer.new(@order, @options))
+  end
+
+  def destroy
+    @order.destroy
+    head 204
   end
 
   private
