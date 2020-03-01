@@ -2,12 +2,19 @@ class Api::V1::OrdersController < ApplicationController
   before_action :find_recipient, only: [:create]
   before_action :find_deliveryman, only: [:create]
 
+  def index
+    options = { include: %i[recipient deliveryman] }
+    @orders = serializer.new(Order.all, options).serializable_hash
+    json_response(@orders)
+  end
+
   def create
     @order = Order.new(order_params)
     @order.deliveryman = @deliveryman
     @order.recipient = @recipient
     @order.save!
-    json_response(serializer.new(@order).serialized_json, :created)
+    options = { include: %i[recipient deliveryman] }
+    json_response(serializer.new(@order, options).serialized_json, :created)
   end
 
   private

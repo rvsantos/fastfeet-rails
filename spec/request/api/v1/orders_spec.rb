@@ -39,4 +39,19 @@ describe 'Orders API', type: :request do
       end
     end
   end
+
+  describe 'GET /orders' do
+    before do
+      create_list(:order, 5)
+      get '/orders', params: {}, headers: headers
+    end
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+
+    it 'returns all orders' do
+      expect(json_body[:data].count).to eq(5)
+    end
+  end
 end
