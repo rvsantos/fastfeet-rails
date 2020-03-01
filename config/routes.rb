@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :deliverymans, only: %i[create index show update destroy] do
         resources :avatar, only: [:create]
       end
+      resources :orders, only: [:create]
     end
   end
 end
