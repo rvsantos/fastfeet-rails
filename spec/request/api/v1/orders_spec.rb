@@ -5,6 +5,8 @@ describe 'Orders API', type: :request do
   let(:deliveryman_id) { deliveryman.id }
   let(:recipient) { create(:recipient) }
   let(:recipient_id) { recipient.id }
+  let(:order) { create(:order) }
+  let(:order_id) { order.id }
   let(:headers) { valid_headers }
   let(:valid_params) do
     {
@@ -52,6 +54,34 @@ describe 'Orders API', type: :request do
 
     it 'returns all orders' do
       expect(json_body[:data].count).to eq(5)
+    end
+  end
+
+  describe 'GET /orders/:id' do
+    before do
+      get "/orders/#{order_id}", params: {}, headers: headers
+    end
+
+    context 'when order request exist' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns json data with order' do
+        expect(json_body[:data][:attributes]).to have_key(:product)
+      end
+    end
+
+    context 'when order request does not exist' do
+      let(:order_id) { 1000 }
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns json data with error message' do
+        expect(json_body[:message]).to match(/Couldn't find Order/)
+      end
     end
   end
 end
