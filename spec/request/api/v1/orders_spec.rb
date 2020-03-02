@@ -131,4 +131,16 @@ describe 'Orders API', type: :request do
       expect { subject }.to change(Order, :count).from(1).to(0)
     end
   end
+
+  describe '/orders/:id/withdrawal' do
+    before { post "/orders/#{order_id}/withdrawal", params: {}, headers: headers }
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+
+    it 'returns json data with start_date' do
+      expect(json_body[:data][:attributes][:start_date]).not_to be_nil
+    end
+  end
 end
